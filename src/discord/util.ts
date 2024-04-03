@@ -1,6 +1,11 @@
 import { EmbedBuilder, Message } from "discord.js";
-import { Joker, jokerKeys, jokerMap, jokers } from "./balatro";
 import { closest } from "fastest-levenshtein";
+import { Joker, jokers } from "balatro";
+
+const jokerKeys = jokers.map((j) => j.name.toLowerCase());
+export const jokerMap = Object.fromEntries(
+  jokerKeys.map((key, index) => [key, jokers[index]]),
+);
 
 export const handleCardTags = async (message: Message) => {
   const messageTags = message.content.match(/\(\((.*?)\)\)/g) as string[];
