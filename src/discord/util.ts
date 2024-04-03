@@ -20,18 +20,18 @@ export const handleCardTags = async (message: Message) => {
     return new EmbedBuilder()
       .setTitle(joker.name)
       .setThumbnail(joker.imageUrl)
-      .addFields(
+      .addFields([
         { name: "Rarity", value: capitalize(joker.rarity), inline: true },
         { name: "Type", value: capitalize(joker.type), inline: true },
         { name: "Effect", value: joker.effect },
-        { name: "Activation", value: capitalize(joker.activation) },
+        ...(joker.activation
+          ? [{ name: "Activation", value: capitalize(joker.activation) }]
+          : []),
         { name: "Unlock Requirement", value: joker.unlockRequirement },
         { name: "Buy Price", value: joker.buyPrice.toString(), inline: true },
         { name: "Sell Price", value: joker.sellPrice.toString(), inline: true },
-      );
+      ]);
   });
-
-  console.log(embeds);
 
   message.reply({ embeds });
 };
