@@ -33,6 +33,7 @@ export const handleCardTags = async (message: Message) => {
       ]);
   });
 
+  if (embeds.length === 0) return;
   message.reply({ embeds });
 };
 
