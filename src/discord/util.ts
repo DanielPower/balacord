@@ -2,6 +2,13 @@ import { EmbedBuilder, Message } from "discord.js";
 import { closest } from "fastest-levenshtein";
 import { Joker, jokers } from "balatro";
 
+const rarityColors: Record<Joker["rarity"], number> = {
+  common: 0x0093ff,
+  uncommon: 0x35bc86,
+  rare: 0xff4c40,
+  legendary: 0xaa5ab4,
+};
+
 const jokerNames = Object.values(jokers).map((j) => j.name.toLowerCase());
 export const handleCardTags = async (message: Message) => {
   const tags = message.content.match(/\(\((.*?)\)\)/g) as string[];
@@ -29,6 +36,7 @@ export const handleCardTags = async (message: Message) => {
         new EmbedBuilder()
           .setTitle(joker.name)
           .setThumbnail(joker.imageUrl)
+          .setColor(rarityColors[joker.rarity])
           .addFields([
             { name: "Rarity", value: capitalize(joker.rarity), inline: true },
             { name: "Type", value: capitalize(joker.type), inline: true },
@@ -54,6 +62,7 @@ export const handleCardTags = async (message: Message) => {
         new EmbedBuilder()
           .setTitle(joker.name)
           .setThumbnail(joker.imageUrl)
+          .setColor(rarityColors[joker.rarity])
           .setDescription(joker.effect),
       );
     }
