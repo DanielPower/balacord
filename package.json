@@ -7,7 +7,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "balatro": "0.0.3",
+    "balatro": "0.0.5",
     "discord.js": "^14.14.1",
     "fastest-levenshtein": "^1.0.16",
     "prettier": "^3.2.5"

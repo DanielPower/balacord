@@ -2,41 +2,62 @@ import { EmbedBuilder, Message } from "discord.js";
 import { closest } from "fastest-levenshtein";
 import { Joker, jokers } from "balatro";
 
-const jokerKeys = jokers.map((j) => j.name.toLowerCase());
-export const jokerMap = Object.fromEntries(
-  jokerKeys.map((key, index) => [key, jokers[index]]),
-);
-
+const jokerNames = Object.values(jokers).map((j) => j.name.toLowerCase());
 export const handleCardTags = async (message: Message) => {
-  const messageTags = message.content.match(/\(\((.*?)\)\)/g) as string[];
-  if (!messageTags) return;
+  const tags = message.content.match(/\(\((.*?)\)\)/g) as string[];
+  if (!tags) return;
 
-  const taggedJokers: Array<Joker> = [];
-  for (const tag of messageTags) {
-    const parsedTag = tag.toLowerCase().slice(2, -2);
-    const jokerKey = closest(parsedTag, jokerKeys);
-    const joker = jokerMap[jokerKey];
+  const taggedJokers: Map<Joker, boolean> = new Map();
+  for (const tag of tags) {
+    const parsedTag = tag.toLowerCase().slice(2, -2).replace("+", "");
+    const jokerName = closest(parsedTag, jokerNames);
+    const joker = Object.values(jokers).find(
+      (j) => j.name.toLowerCase() === jokerName,
+    );
     if (joker) {
-      taggedJokers.push(joker);
+      taggedJokers.set(
+        joker,
+        taggedJokers.get(joker) || tag.slice(0, -2).endsWith("+"),
+      );
     }
   }
 
-  const embeds = taggedJokers.map((joker) => {
-    return new EmbedBuilder()
-      .setTitle(joker.name)
-      .setThumbnail(joker.imageUrl)
-      .addFields([
-        { name: "Rarity", value: capitalize(joker.rarity), inline: true },
-        { name: "Type", value: capitalize(joker.type), inline: true },
-        { name: "Effect", value: joker.effect },
-        ...(joker.activation
-          ? [{ name: "Activation", value: capitalize(joker.activation) }]
-          : []),
-        { name: "Unlock Requirement", value: joker.unlockRequirement },
-        { name: "Buy Price", value: joker.buyPrice.toString(), inline: true },
-        { name: "Sell Price", value: joker.sellPrice.toString(), inline: true },
-      ]);
-  });
+  const embeds: EmbedBuilder[] = [];
+  for (const [joker, extended] of taggedJokers) {
+    if (extended) {
+      embeds.push(
+        new EmbedBuilder()
+          .setTitle(joker.name)
+          .setThumbnail(joker.imageUrl)
+          .addFields([
+            { name: "Rarity", value: capitalize(joker.rarity), inline: true },
+            { name: "Type", value: capitalize(joker.type), inline: true },
+            { name: "Effect", value: joker.effect },
+            ...(joker.activation
+              ? [{ name: "Activation", value: capitalize(joker.activation) }]
+              : []),
+            { name: "Unlock Requirement", value: joker.unlockRequirement },
+            {
+              name: "Buy Price",
+              value: joker.buyPrice.toString(),
+              inline: true,
+            },
+            {
+              name: "Sell Price",
+              value: joker.sellPrice.toString(),
+              inline: true,
+            },
+          ]),
+      );
+    } else {
+      embeds.push(
+        new EmbedBuilder()
+          .setTitle(joker.name)
+          .setThumbnail(joker.imageUrl)
+          .setDescription(joker.effect),
+      );
+    }
+  }
 
   if (embeds.length === 0) return;
   message.reply({ embeds });
