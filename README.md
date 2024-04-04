@@ -8,8 +8,13 @@ A Discord Bot for Balatro players.
 
 ## Using the bot
 
-The bot's only functionality currently is to embed joker information (for a subset of jokers).
-To embed a joker, write its name in double brackets. For example, `((Greedy Joker))`.
+To embed a joker, write its name in double brackets. For example, `((Fibonacci))`.
+
+![image](https://github.com/DanielPower/balacord/assets/12166320/0888658c-5836-4bbb-9cd1-e21896f0d510)
+
+To include more information about the joker, include a + after its name. For example, `((Tribuolet+))`
+
+![image](https://github.com/DanielPower/balacord/assets/12166320/ed74f586-c978-4ca2-bfd8-ecebee2bf9c5)
 
 ## Running the bot
 
@@ -25,3 +30,17 @@ Then run the following command:
 ```bash
 bun dev
 ```
+
+## Planned upcoming features
+
+### More embeds
+- Blinds
+- Tags
+- Spectral Cards
+- Tarot Cards
+
+### Card search
+- Filter by rarity, buy price, sell price, keywords, etc.
+
+### I'm open to suggestions
+Please open an issue if you have an idea for useful commands, embeds, or other functionalities the bot could use.
