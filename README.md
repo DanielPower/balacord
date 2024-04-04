@@ -1,4 +1,4 @@
-# Balabot
+# Balacord
 
 A Discord Bot for Balatro players.
 
@@ -25,4 +25,3 @@ Then run the following command:
 ```bash
 bun dev
 ```
-
