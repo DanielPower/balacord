@@ -1,6 +1,8 @@
 import { EmbedBuilder, Message } from "discord.js";
-import { closest } from "fastest-levenshtein";
+import { closest, distance } from "fastest-levenshtein";
 import { Joker, jokers } from "balatro";
+
+const MAX_DISTANCE = 3;
 
 const rarityColors: Record<Joker["rarity"], number> = {
   common: 0x0093ff,
@@ -18,6 +20,19 @@ export const handleCardTags = async (message: Message) => {
   for (const tag of tags) {
     const parsedTag = tag.toLowerCase().slice(2, -2).replace("+", "");
     const jokerName = closest(parsedTag, jokerNames);
+    const distanceToJoker = distance(parsedTag, jokerName);
+
+    if (distanceToJoker > MAX_DISTANCE) {
+      console.log(
+        `Could not find close enough joker for tag: ${parsedTag}, closest was ${jokerName} with distance ${distanceToJoker}`,
+      );
+      continue;
+    } else {
+      console.log(
+        `Found close enough joker '${jokerName}' for tag: ${parsedTag}, distance: ${distanceToJoker}`,
+      );
+    }
+
     const joker = Object.values(jokers).find(
       (j) => j.name.toLowerCase() === jokerName,
     );
