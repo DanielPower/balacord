@@ -7,6 +7,7 @@ import {
   type Interaction,
 } from "discord.js";
 import { handleCardTags } from "./util";
+import { logger } from "../logging";
 const commands = {};
 
 export const registerCommands = async () => {
@@ -27,7 +28,7 @@ export const startBot = async () => {
   });
 
   bot.once(Events.ClientReady, (c) => {
-    console.log(`Discord bot ready. Logged in as ${c.user.tag}`);
+    logger.info(`Discord bot ready. Logged in as ${c.user.tag}`);
   });
 
   bot.on("interactionCreate", async (interaction: Interaction) => {
@@ -44,7 +45,6 @@ export const startBot = async () => {
 
   bot.on("messageCreate", async (message) => {
     if (message.author.bot) return;
-    console.log("Handling card tags.");
     handleCardTags(message);
   });
 

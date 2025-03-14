@@ -1,6 +1,7 @@
 import { EmbedBuilder, Message } from "discord.js";
 import { closest, distance } from "fastest-levenshtein";
 import { Joker, jokers } from "balatro";
+import { logger } from "../logging";
 
 const MAX_DISTANCE = 3;
 
@@ -27,15 +28,22 @@ export const handleCardTags = async (message: Message) => {
     const jokerName = closest(parsedTag, jokerNames);
     const distanceToJoker = distance(parsedTag, jokerName);
 
-    if (distanceToJoker > MAX_DISTANCE) {
-      console.log(
-        `Could not find close enough joker for tag: ${parsedTag}, closest was ${jokerName} with distance ${distanceToJoker}`,
-      );
+    const jokerFound = distanceToJoker <= MAX_DISTANCE;
+
+    logger.info(
+      {
+        parsedTag,
+        jokerName,
+        distanceToJoker,
+        jokerFound,
+        guildId: message.guild?.id,
+        guildName: message.guild?.name,
+      },
+      "Joker tag used",
+    );
+
+    if (!jokerFound) {
       continue;
-    } else {
-      console.log(
-        `Found close enough joker '${jokerName}' for tag: ${parsedTag}, distance: ${distanceToJoker}`,
-      );
     }
 
     const joker = Object.values(jokers).find(

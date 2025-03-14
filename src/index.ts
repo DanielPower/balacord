@@ -1,4 +1,5 @@
-import { registerCommands, startBot } from "./discord/discord";
+import { startBot } from "./discord/discord";
+import { logger } from "./logging";
 
-console.log("Starting the bot.");
+logger.info("Starting bot.");
 await startBot();
