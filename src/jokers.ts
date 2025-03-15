@@ -41,7 +41,7 @@ export const jokers: { [key: string]: Joker } = Object.fromEntries(
           sellPrice: Math.floor(joker.cost / 2),
           unlockRequirement: enUsAny.descriptions.Joker[key].unlock?.join(" "),
           image: await getCard(
-            `${Bun.env.BALATRO_PATH}/resources/textures/2x/Jokers.png`,
+            "../extracted/Jokers.png",
             joker.pos.x,
             joker.pos.y,
             142,
