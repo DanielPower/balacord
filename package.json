@@ -1,6 +1,7 @@
 {
   "name": "balacord",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
@@ -12,7 +13,8 @@
     "fastest-levenshtein": "^1.0.16",
     "pino": "^9.6.0",
     "pino-loki": "^2.5.0",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "bun-types": "latest",

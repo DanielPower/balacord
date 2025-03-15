@@ -1,2 +1,5 @@
 /node_modules
 /.env
+
+# Do not distribute Balatro
+/Balatro/

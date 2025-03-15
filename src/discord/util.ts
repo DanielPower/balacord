@@ -1,6 +1,6 @@
-import { EmbedBuilder, Message } from "discord.js";
+import { AttachmentBuilder, EmbedBuilder, Message } from "discord.js";
 import { closest, distance } from "fastest-levenshtein";
-import { Joker, jokers } from "balatro";
+import { Joker, jokers } from "../jokers";
 import { logger } from "../logging";
 
 const MAX_DISTANCE = 3;
@@ -58,46 +58,45 @@ export const handleCardTags = async (message: Message) => {
   }
 
   const embeds: EmbedBuilder[] = [];
+  const files: AttachmentBuilder[] = [];
   for (const [joker, extended] of taggedJokers) {
+    const attachment = new AttachmentBuilder(joker.image, {
+      name: `${joker.key}.png`,
+    });
+    files.push(attachment);
+    const embed = new EmbedBuilder()
+      .setTitle(joker.name)
+      .setThumbnail(`attachment://${joker.key}.png`)
+      .setColor(rarityColors[joker.rarity]);
     if (extended) {
-      embeds.push(
-        new EmbedBuilder()
-          .setTitle(joker.name)
-          .setThumbnail(joker.imageUrl)
-          .setColor(rarityColors[joker.rarity])
-          .addFields([
-            { name: "Rarity", value: capitalize(joker.rarity), inline: true },
-            { name: "Type", value: capitalize(joker.type), inline: true },
-            { name: "Effect", value: joker.effect },
-            ...(joker.activation
-              ? [{ name: "Activation", value: capitalize(joker.activation) }]
-              : []),
-            { name: "Unlock Requirement", value: joker.unlockRequirement },
-            {
-              name: "Buy Price",
-              value: joker.buyPrice.toString(),
-              inline: true,
-            },
-            {
-              name: "Sell Price",
-              value: joker.sellPrice.toString(),
-              inline: true,
-            },
-          ]),
-      );
+      embed.addFields([
+        { name: "Rarity", value: capitalize(joker.rarity), inline: true },
+        { name: "Effect", value: joker.effectText },
+        ...(joker.activation
+          ? [{ name: "Activation", value: capitalize(joker.activation) }]
+          : []),
+        ...(joker.unlockRequirement
+          ? [{ name: "Unlock Requirement", value: joker.unlockRequirement }]
+          : []),
+        {
+          name: "Buy Price",
+          value: joker.buyPrice.toString(),
+          inline: true,
+        },
+        {
+          name: "Sell Price",
+          value: joker.sellPrice.toString(),
+          inline: true,
+        },
+      ]);
     } else {
-      embeds.push(
-        new EmbedBuilder()
-          .setTitle(joker.name)
-          .setThumbnail(joker.imageUrl)
-          .setColor(rarityColors[joker.rarity])
-          .setDescription(joker.effect),
-      );
+      embed.setDescription(joker.effectText);
     }
+    embeds.push(embed);
   }
 
   if (embeds.length === 0) return;
-  message.reply({ embeds });
+  message.reply({ embeds, files });
 };
 
 const capitalize = (s: string) =>
