@@ -51,5 +51,3 @@ export const jokers: { [key: string]: Joker } = Object.fromEntries(
     ]),
   ),
 );
-
-console.dir(jokers, { depth: null });
