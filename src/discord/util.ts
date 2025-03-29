@@ -30,18 +30,6 @@ export const handleCardTags = async (message: Message) => {
 
     const jokerFound = distanceToJoker <= MAX_DISTANCE;
 
-    logger.info(
-      {
-        parsedTag,
-        jokerName,
-        distanceToJoker,
-        jokerFound,
-        guildId: message.guild?.id,
-        guildName: message.guild?.name,
-      },
-      "Joker tag used",
-    );
-
     if (!jokerFound) {
       continue;
     }
@@ -49,10 +37,22 @@ export const handleCardTags = async (message: Message) => {
     const joker = Object.values(jokers).find(
       (j) => j.name.toLowerCase() === jokerName,
     );
+
     if (joker) {
-      taggedJokers.set(
-        joker,
-        taggedJokers.get(joker) || tag.slice(0, -2).endsWith("+"),
+      const extended =
+        taggedJokers.get(joker) || tag.slice(0, -2).endsWith("+");
+      taggedJokers.set(joker, extended);
+      logger.info(
+        {
+          parsedTag,
+          jokerName,
+          distanceToJoker,
+          jokerFound,
+          guildId: message.guild?.id,
+          guildName: message.guild?.name,
+          extended,
+        },
+        "Joker tag used",
       );
     }
   }
@@ -71,10 +71,7 @@ export const handleCardTags = async (message: Message) => {
     if (extended) {
       embed.addFields([
         { name: "Rarity", value: capitalize(joker.rarity), inline: true },
-        { name: "Effect", value: joker.effectText },
-        ...(joker.activation
-          ? [{ name: "Activation", value: capitalize(joker.activation) }]
-          : []),
+        { name: "Effect", value: joker.effect },
         ...(joker.unlockRequirement
           ? [{ name: "Unlock Requirement", value: joker.unlockRequirement }]
           : []),
@@ -90,7 +87,7 @@ export const handleCardTags = async (message: Message) => {
         },
       ]);
     } else {
-      embed.setDescription(joker.effectText);
+      embed.setDescription(joker.effect);
     }
     embeds.push(embed);
   }
