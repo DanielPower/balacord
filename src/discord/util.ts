@@ -15,7 +15,6 @@ const rarityColors: Record<Joker["rarity"], number> = {
 
 const jokerNames = Object.values(jokers).map((j) => j.name.toLowerCase());
 export const handleCardTags = async (message: Message) => {
-  userSeen(message.author.id);
   const nono = message.content.match(/\(\(\((.*?)\)\)\)/g) as string[];
   if (nono) {
     message.reply("Please do not use triple parentheses.");
@@ -35,6 +34,8 @@ export const handleCardTags = async (message: Message) => {
     if (!jokerFound) {
       continue;
     }
+
+    userSeen(message.author.id);
 
     const joker = Object.values(jokers).find(
       (j) => j.name.toLowerCase() === jokerName,
