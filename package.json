@@ -8,9 +8,11 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@types/pg": "^8.11.11",
     "balatro": "0.0.5",
     "discord.js": "^14.14.1",
     "fastest-levenshtein": "^1.0.16",
+    "pg": "^8.14.1",
     "pino": "^9.6.0",
     "pino-loki": "^2.5.0",
     "prettier": "^3.2.5",

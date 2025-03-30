@@ -2,6 +2,7 @@ import { AttachmentBuilder, EmbedBuilder, Message } from "discord.js";
 import { closest, distance } from "fastest-levenshtein";
 import { Joker, jokers } from "../jokers";
 import { logger } from "../logging";
+import { userSeen } from "../db/actions";
 
 const MAX_DISTANCE = 3;
 
@@ -14,6 +15,7 @@ const rarityColors: Record<Joker["rarity"], number> = {
 
 const jokerNames = Object.values(jokers).map((j) => j.name.toLowerCase());
 export const handleCardTags = async (message: Message) => {
+  userSeen(message.author.id);
   const nono = message.content.match(/\(\(\((.*?)\)\)\)/g) as string[];
   if (nono) {
     message.reply("Please do not use triple parentheses.");
@@ -48,6 +50,7 @@ export const handleCardTags = async (message: Message) => {
           jokerName,
           distanceToJoker,
           jokerFound,
+          userId: message.author.id,
           guildId: message.guild?.id,
           guildName: message.guild?.name,
           extended,
