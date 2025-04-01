@@ -2,6 +2,7 @@ import {
   Client,
   Events,
   GatewayIntentBits,
+  Message,
   REST,
   Routes,
   type Interaction,
@@ -45,7 +46,8 @@ export const startBot = async () => {
 
   bot.on("messageCreate", async (message) => {
     if (message.author.bot) return;
-    handleCardTags(message);
+    if (!message.guild) return;
+    handleCardTags(message as Message<true>);
   });
 
   bot.login(Bun.env.DISCORD_TOKEN);
