@@ -8,6 +8,7 @@ export const localizations = {
     sell_price: "Sell Price",
     unlock_requirement: "Unlock Requirement",
     rarities: ["Common", "Uncommon", "Rare", "Legendary"],
+    language_change: "Balacord's language has been set to English",
   },
   de: {
     effect: "Effekt",
@@ -16,6 +17,7 @@ export const localizations = {
     sell_price: "Verkaufspreis",
     unlock_requirement: "Freischaltbedingung",
     rarities: ["Gewöhnlich", "Ungewöhnlich", "Selten", "Legendär"],
+    language_change: "Die Sprache von Balacord wurde auf Deutsch eingestellt",
   },
   es_419: {
     effect: "Efecto",
@@ -24,6 +26,8 @@ export const localizations = {
     sell_price: "Precio de venta",
     unlock_requirement: "Requisito de desbloqueo",
     rarities: ["Común", "Poco común", "Raro", "Legendario"],
+    language_change:
+      "El idioma de Balacord se ha configurado en Español (Latinoamérica)",
   },
   es_ES: {
     effect: "Efecto",
@@ -32,6 +36,8 @@ export const localizations = {
     sell_price: "Precio de venta",
     unlock_requirement: "Requisito de desbloqueo",
     rarities: ["Común", "Poco común", "Raro", "Legendario"],
+    language_change:
+      "El idioma de Balacord se ha configurado en Español (España)",
   },
   fr: {
     effect: "Effet",
@@ -40,6 +46,7 @@ export const localizations = {
     sell_price: "Prix de vente",
     unlock_requirement: "Condition de déverrouillage",
     rarities: ["Commun", "Peu commun", "Rare", "Légendaire"],
+    language_change: "La langue de Balacord a été définie sur Français",
   },
   id: {
     effect: "Efek",
@@ -48,6 +55,7 @@ export const localizations = {
     sell_price: "Harga Jual",
     unlock_requirement: "Persyaratan Buka Kunci",
     rarities: ["Umum", "Tidak umum", "Langka", "Legendaris"],
+    language_change: "Bahasa Balacord telah diatur ke Bahasa Indonesia",
   },
   it: {
     effect: "Effetto",
@@ -56,6 +64,7 @@ export const localizations = {
     sell_price: "Prezzo di vendita",
     unlock_requirement: "Requisito di sblocco",
     rarities: ["Comune", "Non comune", "Raro", "Leggendario"],
+    language_change: "La lingua di Balacord è stata impostata su Italiano",
   },
   ja: {
     effect: "効果",
@@ -64,6 +73,7 @@ export const localizations = {
     sell_price: "売却価格",
     unlock_requirement: "解放条件",
     rarities: ["コモン", "アンコモン", "レア", "レジェンダリー"],
+    language_change: "Balacordの言語が日本語に設定されました",
   },
   ko: {
     effect: "효과",
@@ -72,6 +82,7 @@ export const localizations = {
     sell_price: "판매 가격",
     unlock_requirement: "잠금 해제 요구 사항",
     rarities: ["일반", "희귀", "레어", "전설적"],
+    language_change: "Balacord의 언어가 한국어로 설정되었습니다",
   },
   nl: {
     effect: "Effect",
@@ -80,6 +91,7 @@ export const localizations = {
     sell_price: "Verkoopprijs",
     unlock_requirement: "Ontgrendelingsvoorwaarde",
     rarities: ["Gewoon", "Ongewoon", "Zeldzaam", "Legendarisch"],
+    language_change: "De taal van Balacord is ingesteld op Nederlands",
   },
   pl: {
     effect: "Efekt",
@@ -88,6 +100,7 @@ export const localizations = {
     sell_price: "Cena sprzedaży",
     unlock_requirement: "Wymaganie odblokowania",
     rarities: ["Pospolity", "Niepospolity", "Rzadki", "Legendarny"],
+    language_change: "Język Balacord został ustawiony na Polski",
   },
   pt_BR: {
     effect: "Efeito",
@@ -96,6 +109,8 @@ export const localizations = {
     sell_price: "Preço de venda",
     unlock_requirement: "Requisito para desbloquear",
     rarities: ["Comum", "Incomum", "Raro", "Lendário"],
+    language_change:
+      "O idioma do Balacord foi definido para Português (Brasil)",
   },
   ru: {
     effect: "Эффект",
@@ -104,6 +119,7 @@ export const localizations = {
     sell_price: "Цена продажи",
     unlock_requirement: "Требование для разблокировки",
     rarities: ["Обычный", "Необычный", "Редкий", "Легендарный"],
+    language_change: "Язык Balacord был установлен на Русский",
   },
   zh_CN: {
     effect: "效果",
@@ -112,6 +128,7 @@ export const localizations = {
     sell_price: "出售价格",
     unlock_requirement: "解锁要求",
     rarities: ["普通", "非凡", "稀有", "传说"],
+    language_change: "Balacord的语言已设置为简体中文",
   },
   zh_TW: {
     effect: "效果",
@@ -120,6 +137,7 @@ export const localizations = {
     sell_price: "出售價格",
     unlock_requirement: "解鎖要求",
     rarities: ["普通", "非凡", "稀有", "傳說"],
+    language_change: "Balacord的語言已設置為繁體中文",
   },
 };
 
@@ -161,3 +179,5 @@ export const discordToBalatroLocale = (
 export const language_keys = Object.keys(
   localizations,
 ) as (keyof typeof localizations)[];
+
+export type Localization = keyof typeof localizations;

@@ -9,7 +9,9 @@ import {
 } from "discord.js";
 import { handleCardTags } from "./util";
 import { logger } from "../logging";
-const commands = {};
+import { createGuildIfNotExists } from "../db/actions";
+import { language } from "./commands/language";
+const commands = { language };
 
 export const registerCommands = async () => {
   const rest = new REST().setToken(Bun.env.DISCORD_TOKEN);
@@ -47,6 +49,7 @@ export const startBot = async () => {
   bot.on("messageCreate", async (message) => {
     if (message.author.bot) return;
     if (!message.guild) return;
+    createGuildIfNotExists(message.guild.id);
     handleCardTags(message as Message<true>);
   });
 

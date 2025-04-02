@@ -8,6 +8,7 @@ import {
   language_keys,
   localizations,
 } from "../localization";
+import { getGuildLanguage } from "../db/actions";
 
 const MAX_DISTANCE = 3;
 const rarityColors = [0x0093ff, 0x35bc86, 0xff4c40, 0xaa5ab4];
@@ -33,7 +34,10 @@ export const handleCardTags = async (message: Message<true>) => {
   const tags = message.content.match(/\(\((.*?)\)\)/g) as string[];
   if (!tags) return;
 
-  const guildLanguage = discordToBalatroLocale(message.guild.preferredLocale);
+  let guildLanguage = await getGuildLanguage(message.guild.id);
+  if (!guildLanguage) {
+    guildLanguage = discordToBalatroLocale(message.guild.preferredLocale);
+  }
 
   const taggedJokers: Map<Joker, boolean> = new Map();
   for (const tag of tags) {
@@ -44,11 +48,8 @@ export const handleCardTags = async (message: Message<true>) => {
     const distanceToJoker = distance(parsedTag, jokerName);
 
     if (distanceToJoker <= MAX_DISTANCE) {
-      console.log("found joker", jokerName);
       const jokerKey = jokerMaps[guildLanguage].get(jokerName);
-      console.log("jokerKey", jokerKey);
       if (!jokerKey) continue;
-      console.log("jokerKey", jokerKey);
       joker = jokers[jokerKey];
     }
 
