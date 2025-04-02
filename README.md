@@ -2,6 +2,10 @@
 
 A Discord Bot for Balatro players.
 
+## Join the community
+
+[Discord server](https://discord.gg/SxcZkqF6).
+
 ## Invite the bot to your server
 
 [Invite link](https://discord.com/oauth2/authorize?client_id=1224531149372657767&permissions=2147484672&scope=bot).
