@@ -2,44 +2,72 @@ import { AttachmentBuilder, EmbedBuilder, Message } from "discord.js";
 import { closest, distance } from "fastest-levenshtein";
 import { Joker, jokers } from "../jokers";
 import { logger } from "../logging";
-import { recordActivity } from "../db/actions";
+import { capitalize } from "../util";
+import {
+  discordToBalatroLocale,
+  language_keys,
+  localizations,
+} from "../localization";
 
 const MAX_DISTANCE = 3;
+const rarityColors = [0x0093ff, 0x35bc86, 0xff4c40, 0xaa5ab4];
 
-const rarityColors: Record<Joker["rarity"], number> = {
-  common: 0x0093ff,
-  uncommon: 0x35bc86,
-  rare: 0xff4c40,
-  legendary: 0xaa5ab4,
-};
-
-const jokerNames = Object.values(jokers).map((j) => j.name.toLowerCase());
+const jokerMaps = Object.fromEntries(
+  language_keys.map((language_key) => [
+    language_key,
+    new Map(
+      Object.values(jokers).map((j) => [
+        j.name[language_key].toLowerCase(),
+        j.key,
+      ]),
+    ),
+  ]),
+);
+const jokerNames = Object.fromEntries(
+  language_keys.map((language_key) => [
+    language_key,
+    Array.from(jokerMaps[language_key].keys()),
+  ]),
+);
 export const handleCardTags = async (message: Message<true>) => {
-  const nono = message.content.match(/\(\(\((.*?)\)\)\)/g) as string[];
-  if (nono) {
-    message.reply("Please do not use triple parentheses.");
-    return;
-  }
   const tags = message.content.match(/\(\((.*?)\)\)/g) as string[];
   if (!tags) return;
 
+  const guildLanguage = discordToBalatroLocale(message.guild.preferredLocale);
+
   const taggedJokers: Map<Joker, boolean> = new Map();
   for (const tag of tags) {
+    // First try in the guild's language
+    let joker: Joker | undefined = undefined;
     const parsedTag = tag.toLowerCase().slice(2, -2).replace("+", "");
-    const jokerName = closest(parsedTag, jokerNames);
+    const jokerName = closest(parsedTag, jokerNames[guildLanguage]);
     const distanceToJoker = distance(parsedTag, jokerName);
 
-    const jokerFound = distanceToJoker <= MAX_DISTANCE;
-
-    if (!jokerFound) {
-      continue;
+    if (distanceToJoker <= MAX_DISTANCE) {
+      console.log("found joker", jokerName);
+      const jokerKey = jokerMaps[guildLanguage].get(jokerName);
+      console.log("jokerKey", jokerKey);
+      if (!jokerKey) continue;
+      console.log("jokerKey", jokerKey);
+      joker = jokers[jokerKey];
     }
 
-    recordActivity(message.author.id, message.guild.id);
+    if (!joker && guildLanguage !== "en-us") {
+      // If not found, try in English
+      const parsedTag = tag.toLowerCase().slice(2, -2).replace("+", "");
+      const jokerName = closest(parsedTag, jokerNames["en-us"]);
+      const distanceToJoker = distance(parsedTag, jokerName);
 
-    const joker = Object.values(jokers).find(
-      (j) => j.name.toLowerCase() === jokerName,
-    );
+      if (distanceToJoker <= MAX_DISTANCE) {
+        const jokerKey = jokerMaps["en-us"].get(jokerName);
+        if (!jokerKey) continue;
+        joker = jokers[jokerKey];
+      }
+    }
+
+    if (!joker) {
+      continue;
+    }
 
     if (joker) {
       const extended =
@@ -50,7 +78,6 @@ export const handleCardTags = async (message: Message<true>) => {
           parsedTag,
           jokerName,
           distanceToJoker,
-          jokerFound,
           userId: message.author.id,
           guildId: message.guild.id,
           guildName: message.guild.name,
@@ -69,29 +96,35 @@ export const handleCardTags = async (message: Message<true>) => {
     });
     files.push(attachment);
     const embed = new EmbedBuilder()
-      .setTitle(joker.name)
+      .setTitle(joker.name[guildLanguage])
       .setThumbnail(`attachment://${joker.key}.png`)
       .setColor(rarityColors[joker.rarity]);
     if (extended) {
       embed.addFields([
-        { name: "Rarity", value: capitalize(joker.rarity), inline: true },
-        { name: "Effect", value: joker.effect },
-        ...(joker.unlockRequirement
-          ? [{ name: "Unlock Requirement", value: joker.unlockRequirement }]
-          : []),
         {
-          name: "Buy Price",
+          name: localizations[guildLanguage].rarity,
+          value: capitalize(
+            localizations[guildLanguage].rarities[joker.rarity],
+          ),
+          inline: true,
+        },
+        {
+          name: localizations[guildLanguage].effect,
+          value: joker.effect[guildLanguage],
+        },
+        {
+          name: localizations[guildLanguage].buy_price,
           value: joker.buyPrice.toString(),
           inline: true,
         },
         {
-          name: "Sell Price",
+          name: localizations[guildLanguage].sell_price,
           value: joker.sellPrice.toString(),
           inline: true,
         },
       ]);
     } else {
-      embed.setDescription(joker.effect);
+      embed.setDescription(joker.effect[guildLanguage]);
     }
     embeds.push(embed);
   }
@@ -99,9 +132,3 @@ export const handleCardTags = async (message: Message<true>) => {
   if (embeds.length === 0) return;
   message.reply({ embeds, files });
 };
-
-const capitalize = (s: string) =>
-  s
-    .split(" ")
-    .map((w) => w[0].toUpperCase() + w.slice(1))
-    .join(" ");

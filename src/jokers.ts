@@ -1,45 +1,51 @@
 import extractedJokers from "../extracted/jokers.json";
 import { getCard } from "./image.ts";
-
-const language = "en-us";
+import { language_keys } from "./localization.ts";
 
 export type Joker = {
   key: string;
   activation?: "independent" | "on scored" | "on held";
   buyPrice: number;
-  effect: string;
-  effectText: string;
-  name: string;
-  rarity: "common" | "uncommon" | "rare" | "legendary";
+  effect: Record<string, string>;
+  name: Record<string, string>;
+  rarity: number;
   sellPrice: number;
   type: string;
   unlockRequirement?: string;
   image: Buffer;
 };
 
-const rarity = ["common", "uncommon", "rare", "legendary"] as const;
+const renderTemplate = (template: string[], vars: string[]) =>
+  template
+    .join(" ")
+    .replace(/{[^{}]*}/g, "")
+    .replace(/#1#/g, vars[0])
+    .replace(/#2#/g, vars[1])
+    .replace(/#3#/g, vars[2])
+    .replace("(Currently ", "(Initially ")
+    .trim();
 
 export const jokers: { [key: string]: Joker } = Object.fromEntries(
   await Promise.all(
     Object.entries(extractedJokers).map(async ([key, joker]: [string, any]) => [
-      key.slice(2),
+      key,
       {
         key,
-        name: joker.name,
-        effectTemplate: joker.descriptions[language].text,
-        effect: joker.descriptions[language].text
-          .join(" ")
-          .replace(/{[^{}]*}/g, " ")
-          .replace(/#1#/g, joker.extra_vars[0])
-          .replace(/#2#/g, joker.extra_vars[1])
-          .replace(/#3#/g, joker.extra_vars[2])
-          .replace("(Currently ", "(Initially ")
-          .replace(/\ +/g, " ")
-          .trim(),
-        rarity: rarity[joker.rarity - 1],
+        name: Object.fromEntries(
+          language_keys.map((language) => [
+            language,
+            joker.descriptions[language].name,
+          ]),
+        ),
+        effect: Object.fromEntries(
+          language_keys.map((language) => [
+            language,
+            renderTemplate(joker.descriptions[language].text, joker.extra_vars),
+          ]),
+        ),
+        rarity: joker.rarity - 1,
         buyPrice: joker.cost,
         sellPrice: Math.floor(joker.cost / 2),
-        unlockRequirement: joker.unlockRequirement,
         image: await getCard(
           "./extracted/Jokers.png",
           joker.pos.x,
