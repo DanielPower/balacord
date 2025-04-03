@@ -12,9 +12,9 @@ export const language = {
         .setDescription("The language to set")
         .setRequired(true)
         .addChoices(
-          ...Object.entries(localizations).map(([name, value]) => ({
-            name,
-            value: name,
+          ...Object.keys(localizations).map((key) => ({
+            name: key,
+            value: key,
           })),
         ),
     ),
@@ -23,6 +23,14 @@ export const language = {
     if (!guildId) {
       await interaction.reply({
         content: "This command can only be used in a server.",
+        ephemeral: true,
+      });
+      return;
+    }
+
+    if (interaction.user.id !== interaction.guild?.ownerId) {
+      await interaction.reply({
+        content: "Only the server owner can change the language.",
         ephemeral: true,
       });
       return;
