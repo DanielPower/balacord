@@ -4,7 +4,7 @@ A Discord Bot for Balatro players.
 
 ## Join the community
 
-[Discord server](https://discord.gg/SxcZkqF6).
+[Discord server](https://discord.gg/4ewczjHvUR).
 
 ## Invite the bot to your server
 
