@@ -81,7 +81,6 @@ export const handleCardTags = async (message: Message<true>) => {
           distanceToJoker,
           userId: message.author.id,
           guildId: message.guild.id,
-          guildName: message.guild.name,
           extended,
         },
         "Joker tag used",
