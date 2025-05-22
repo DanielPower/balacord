@@ -39,9 +39,8 @@ The bot itself, excluding third-party assets, is owned by the developer of Balac
 Balacord collects and stores certain data to provide and improve its services. This includes:
 - Discord server IDs
 - User IDs
-- Parsed joker tags (only the specific text content that appears inside double brackets)
 
-The Bot scans messages to identify text within double brackets. Only this specific text is extracted and stored for analytics. All other message content is immediately discarded and never stored.
+The Bot scans messages to identify text within double brackets to provide the joker card embedding functionality, but does not log or store any message content.
 
 For more information about how we collect, use, and protect your data, please refer to our Privacy Policy.
 

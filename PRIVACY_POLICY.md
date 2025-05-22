@@ -12,7 +12,7 @@ When you use the Bot, we collect certain information, including:
 
 2. **User IDs**: We collect user IDs to associate actions with specific users for analytics purposes.
 
-3. **Message Content**: The Bot scans messages to identify text within double brackets (e.g., `((Fibonacci))`). Only this specific text is extracted and stored for analytics purposes and to provide the joker card embedding functionality. All other message content is immediately discarded and never stored.
+The Bot scans messages to identify text within double brackets (e.g., `((Fibonacci))`) to provide the joker card embedding functionality, but does not log or store any message content.
 
 ## How We Use Your Information
 
