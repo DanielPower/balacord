@@ -76,7 +76,6 @@ export const handleCardTags = async (message: Message<true>) => {
       taggedJokers.set(joker, extended);
       logger.info(
         {
-          parsedTag,
           jokerName,
           distanceToJoker,
           userId: message.author.id,
