@@ -8,7 +8,6 @@ import {
   type Interaction,
 } from "discord.js";
 import { handleCardTags } from "./util";
-import { logger } from "../logging";
 import { createGuildIfNotExists } from "../db/actions";
 import { language } from "./commands/language";
 const commands = { language };
@@ -31,7 +30,7 @@ export const startBot = async () => {
   });
 
   bot.once(Events.ClientReady, (c) => {
-    logger.info(`Discord bot ready. Logged in as ${c.user.tag}`);
+    console.log(`Discord bot ready. Logged in as ${c.user.tag}`);
   });
 
   bot.on("interactionCreate", async (interaction: Interaction) => {

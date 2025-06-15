@@ -1,7 +1,6 @@
 import { AttachmentBuilder, EmbedBuilder, Message } from "discord.js";
 import { closest, distance } from "fastest-levenshtein";
 import { Joker, jokers } from "../jokers";
-import { logger } from "../logging";
 import { capitalize } from "../util";
 import {
   discordToBalatroLocale,
@@ -74,16 +73,6 @@ export const handleCardTags = async (message: Message<true>) => {
       const extended =
         taggedJokers.get(joker) || tag.slice(0, -2).endsWith("+");
       taggedJokers.set(joker, extended);
-      logger.info(
-        {
-          jokerName,
-          distanceToJoker,
-          userId: message.author.id,
-          guildId: message.guild.id,
-          extended,
-        },
-        "Joker tag used",
-      );
     }
   }
 
